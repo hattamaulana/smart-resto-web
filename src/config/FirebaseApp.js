@@ -15,7 +15,8 @@ class FirebaseApp {
       if(! firebase.apps.length)
          firebase.initializeApp(this.config)
       
-      this.queue = firebase.database().ref('ecanteen/order')
+      this.checkout = firebase.database().ref('ecanteen/order')
+      this.queue = firebase.database().ref('ecanteen/queue')
    }
 }
 
