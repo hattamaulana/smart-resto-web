@@ -17,21 +17,24 @@ class Preview extends Component {
 
       this.firebase = new FirebaseApp()
       this.state = {
-         data : []
+         data : [],
+         totalPayment: 0
       }
    }
 
-   setData(data, id, name, price, count) {
-         data.push({ id, name, price, count })
-         return data
-   }
-
    componentDidMount() {
+      var payment = 0
+
       this.firebase.queue.on('value', (snapshot) => {
+         var list = []
+
          if (Object.keys(snapshot).length > 0) {
-            snapshot.forEach((result) => {
-               var temp = this.state.data
-               this.setState({ data: this.setData(temp, result.key, result.val().name, result.val().price, result.val().count) })
+            snapshot.forEach((result) => { 
+               list.push(result.val())
+               this.setState({ data: list })
+
+               payment += result.val().price * result.val().count
+               this.setState({ totalPayment: payment })
             })
          }
       })
@@ -39,7 +42,7 @@ class Preview extends Component {
 
    render(){
       const data = this.state.data
-      const payment = 0
+      const payment = this.state.totalPayment
       const classes = makeStyles(theme => ({
          root: {
             width: '100%',
@@ -50,12 +53,6 @@ class Preview extends Component {
             minWidth: 650,
          },
       }))
-
-      // const getData = () => {
-      //    if(Object.keys(data).length > 0) {
-      //       )
-      //    }
-      // }
       
       return (
          <Container maxWidth="md">
@@ -63,20 +60,20 @@ class Preview extends Component {
                <Table className={classes.table}>
                   <TableHead>
                      <TableRow>
-                        <TableCell align="right">Nama</TableCell>
-                        <TableCell align="right">Harga</TableCell>
-                        <TableCell align="right">Jumlah</TableCell>
-                        <TableCell align="right">Total</TableCell>
+                        <TableCell align="left">Nama</TableCell>
+                        <TableCell align="left">Harga</TableCell>
+                        <TableCell align="left">Jumlah</TableCell>
+                        <TableCell align="left">Total</TableCell>
                      </TableRow>
                   </TableHead>
 
                   <TableBody>
-                     {data.map(result => (
+                     { data.map(result => (
                         <TableRow key={result.id}>
                            <TableCell component="th" scope="row"> {result.name} </TableCell>
-                           <TableCell align="right">Rp. {result.price} </TableCell>
-                           <TableCell align="right"> {result.count} </TableCell>
-                           <TableCell align="right">Rp. {result.price * result.count} </TableCell>
+                           <TableCell align="left">Rp. {result.price} </TableCell>
+                           <TableCell align="left"> {result.count} </TableCell>
+                           <TableCell align="left">Rp. {result.price * result.count} </TableCell>
                         </TableRow >
                      )) }
 
@@ -84,7 +81,9 @@ class Preview extends Component {
                         <TableCell component="th" scope="row"> Total </TableCell>
                         <TableCell align="right"> </TableCell>
                         <TableCell align="right"> </TableCell>
-                        <TableCell align="right">Rp. {payment} </TableCell>
+                        <TableCell align="left">
+                           Rp. { payment }
+                        </TableCell>
                      </TableRow>
                   </TableBody>
                </Table>
