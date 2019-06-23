@@ -14,7 +14,7 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 
 import _ from 'lodash'
-
+import { Header } from '../component/core'
 import { FirebaseApp } from '../../config/Firebase'
 
 class Queue extends Component {
@@ -48,9 +48,11 @@ class Queue extends Component {
    render() {
       const data = this.state.data
       const details = this.state.details
+
       const btnReadyClicked = (event) => { 
         this.firebase.queue.child(this.state.idDetails).remove() 
       }
+
       const classes = makeStyles(theme => ({
          root: {
             width: '99%',
@@ -62,6 +64,7 @@ class Queue extends Component {
             minWidth: 650,
          },
       }))
+
       const StyledTableCell = withStyles(theme => ({
          head: {
             backgroundColor: theme.palette.primary.main,
@@ -74,10 +77,10 @@ class Queue extends Component {
             fontWeight: "bold"
          },
       }))(TableCell);
+
       const mainView = () => {
         if(data.length > 0) {
           return (
-            
               <Grid container justify="center" spacing={5}>
                 <Grid key={0} item xs={3}>
                   <Paper className={classes.root}>
@@ -108,7 +111,6 @@ class Queue extends Component {
                 <Grid key={1} item xs={5}>
                   <Paper className={classes.root}>
                     <Table className={classes.table}>
-
                       <TableHead>
                         <TableRow>
                           <StyledTableCell align="left">Menu Pesanan</StyledTableCell>
@@ -143,12 +145,6 @@ class Queue extends Component {
               </Grid>
             
           )
-        } else {
-          return (
-            <div>
-              <Typography variant="h2" align="center"> ISTIRAHAT SEJENAK KAWAN </Typography>
-            </div>
-          )
         }
       }
 
@@ -157,6 +153,8 @@ class Queue extends Component {
           style={{ marginTop: '100px' }}
           maxWidth="lg"
         >
+          <Header />
+          
           <Box m={2}>
             <Grid container className={classes.root}>
               <Grid item xs={12} alignItems="center">

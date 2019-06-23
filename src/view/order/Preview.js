@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
 import { FirebaseApp } from '../../config/Firebase'
+import { Header } from '../component/core';
 
 class Preview extends Component {
    constructor(props) {
@@ -44,6 +45,7 @@ class Preview extends Component {
       const margin = this.state.margin
       const data = this.state.data
       const payment = this.state.totalPayment
+
       const classes = makeStyles(theme => ({
          root: {
             width: '100%',
@@ -54,6 +56,7 @@ class Preview extends Component {
             minWidth: 650,
          },
       }))
+
       const StyledTableCell = withStyles(theme => ({
          head: {
             backgroundColor: theme.palette.primary.main,
@@ -66,6 +69,7 @@ class Preview extends Component {
             fontWeight: "bold"
          },
       }))(TableCell);
+
       const view = () => {
         if(data.length > 0) {
           return (
@@ -104,12 +108,6 @@ class Preview extends Component {
               </Table>
             </Paper>
           )
-        } else {
-          return (
-            <div>
-              <Typography variant="h1" align="center"> KANTIN PINTAR </Typography>
-            </div>
-          )
         }
       }
       
@@ -118,6 +116,8 @@ class Preview extends Component {
           maxWidth="lg"
           style={{ marginTop: margin+'px' }}
         >
+          <Header />
+
           <Box>
               { view() }
           </Box>

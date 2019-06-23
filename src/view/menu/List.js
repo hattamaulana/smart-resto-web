@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
-import { Container, Box, Table, TableHead, TableBody, TableCell, TableRow, withStyles, makeStyles, Paper, Grid } from '@material-ui/core';
+import { 
+  Container, Box, Table, TableHead, TableBody, TableCell, TableRow, withStyles, makeStyles, Paper, Grid, Typography, Button 
+} from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import QRCode from 'qrcode.react'
+import { Link } from 'react-router-dom'
 import { FirebaseApp } from '../../config/Firebase';
+import Header from '../component/Header';
 
 class List extends Component {
   constructor(props) {
@@ -59,6 +63,8 @@ class List extends Component {
 
     return (
       <Container width={1} >
+        <Header />
+        
         <Box mt={5} width={1}>
           <Grid container justify="center">
             <Grid item xs={7}>
@@ -96,6 +102,16 @@ class List extends Component {
                     }
                   </TableBody>
                 </Table>
+                    
+                <Grid container justify="center">
+                  <Box mt={2} mb={3}>
+                    <Link to="/menu/new">
+                      <Button variant="contained" color="primary">
+                        TAMBAH MENU BARU
+                      </Button>
+                    </Link>
+                  </Box>
+                </Grid>
               </Paper>
             </Grid>
           </Grid>
