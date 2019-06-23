@@ -133,7 +133,7 @@ class Queue extends Component {
                               onClick={event => btnReadyClicked(event)}
                             >
                               PESANAN SIAP
-                                    </Button>
+                            </Button>
                           </TableCell>
                         </TableRow >
                       </TableBody>
