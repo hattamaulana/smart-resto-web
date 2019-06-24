@@ -26,7 +26,7 @@ class Add extends Component {
   btnAddClicked(event) {
     this.firebase.menu.add({
       name: this.state.name,
-      price: this.state.price,
+      price: parseInt(this.state.price),
       imgUri: ''
     }).then((ref) => {
         this.setState({ redirect: true })
