@@ -1,18 +1,10 @@
 import React, { Component } from 'react'
-
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { Container } from '@material-ui/core'
-import Box from '@material-ui/core/Box'
-import Grid from '@material-ui/core/Grid';
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import Paper from '@material-ui/core/Paper'
-import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
-
+import { 
+  withStyles, makeStyles 
+} from '@material-ui/core/styles';
+import { 
+  Container, Box, Grid, Table, TableBody, TableCell, TableHead, TableRow, Paper, Button,
+} from '@material-ui/core'
 import _ from 'lodash'
 import { Header } from '../component/core'
 import { FirebaseApp } from '../../config/Firebase'
@@ -21,7 +13,7 @@ class Queue extends Component {
    constructor(props) {
       super(props)
       this.firebase = new FirebaseApp()
-      this.state = { data: [], idDetails: '',  details: [] }
+      this.state = { margin: 250, data: [], idDetails: '',  details: [] }
    }
 
    componentDidMount() {
@@ -35,8 +27,10 @@ class Queue extends Component {
                var temp = result.val()
                temp.id = result.key
                list.push(temp)               
-               this.setState({ data: list })
+               this.setState({ data: list, margin: 100 })
             })
+         } else {
+           this.setState({ idDetail: '', details: [], data: [], margin: 250 })
          }
       })
    }
@@ -48,6 +42,7 @@ class Queue extends Component {
    render() {
       const data = this.state.data
       const details = this.state.details
+      const margin = this.state.margin
 
       const btnReadyClicked = (event) => { 
         this.firebase.queue.child(this.state.idDetails).remove() 
@@ -143,14 +138,13 @@ class Queue extends Component {
                   </Paper>
                 </Grid>
               </Grid>
-            
           )
         }
       }
 
       return (
         <Container 
-          style={{ marginTop: '100px' }}
+          style={{ marginTop: margin+'px' }}
           maxWidth="lg"
         >
           <Header />

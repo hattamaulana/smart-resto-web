@@ -1,20 +1,16 @@
 import React, { Component } from 'react'
-import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
-import { withStyles, makeStyles } from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-
+import {  
+  makeStyles , Grid, Paper, TextField, Typography, Button, Box, Container  
+} from '@material-ui/core'
+import { Redirect } from 'react-router-dom'
 import { FirebaseApp } from '../../config/Firebase'
-import { Box, Container } from '@material-ui/core';
 import { Header } from '../component/core';
 
 class Add extends Component {
   constructor(props){
     super(props)
     this.firebase = new FirebaseApp()
-    this.state = { name: '', price: '' }
+    this.state = { name: '', price: '', redirect: false }
     this.txtNameOnChange = this.txtNameOnChange.bind(this)
     this.txtPriceOnChange = this.txtPriceOnChange.bind(this)
   }
@@ -32,7 +28,9 @@ class Add extends Component {
       name: this.state.name,
       price: this.state.price,
       imgUri: ''
-    }) // TODO And Success Listener and Failed Listerner
+    }).then((ref) => {
+        this.setState({ redirect: true })
+    })
   }
 
   render() {
@@ -49,11 +47,14 @@ class Add extends Component {
       }
     }));
 
+    if(this.state.redirect) 
+      return <Redirect to="/menu" />
+
     return (
       <Container>
         <Header></Header>
 
-        <Grid container justify="center" alignItems="center" className={classes.root} style={{ marginTop: '100px' }} >
+        <Grid container justify="center" alignItems="center" className={classes.root} style={{ marginTop: '10px' }} >
           <Grid item xs="4">
             <Paper style={{ paddingTop: '25px', paddingBottom: '25px' }}>
               <Box m={1} width={1}>

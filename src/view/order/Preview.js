@@ -1,16 +1,10 @@
 import React, { Component } from 'react'
-
-import { withStyles, makeStyles } from '@material-ui/core/styles'
-import { Container, TableFooter } from '@material-ui/core'
-import Box from '@material-ui/core/Box'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-
+import { 
+  withStyles, makeStyles 
+} from '@material-ui/core/styles'
+import {
+  Container, TableFooter, Box, Table, TableBody, TableCell, TableHead, TableRow, Paper, Typography, 
+} from '@material-ui/core'
 import { FirebaseApp } from '../../config/Firebase'
 import { Header } from '../component/core';
 
@@ -22,22 +16,18 @@ class Preview extends Component {
    }
 
    componentDidMount() {
-      var payment = 0
       this.firebase.checkout.on('value', (snapshot) => {
          var list = []
          if (snapshot.hasChildren()) {
+           var payment = 0
            snapshot.forEach((result) => {
-              this.setState({ margin: 100 })
                list.push(result.val())
-               this.setState({ data: list })
-
                payment += result.val().price * result.val().count
-               this.setState({ totalPayment: payment })
+
+              this.setState({ margin: 100, data: list, totalPayment: payment })
             })
-         } else {
-           this.setState({ data: [] })
-           this.setState({ margin: 250 })
-         }
+         } else
+           this.setState({ data: [], margin: 250 })
       })
    }
 
