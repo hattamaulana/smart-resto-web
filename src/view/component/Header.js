@@ -9,16 +9,8 @@ class Header extends Component {
       <Box mt={5} mb={5}>
         <Grid container justify="center">
           <Grid items>
-            <Typography variant="h3" style={{ color: '#636b6f' }}>
-              KANTIN PINTAR
-              </Typography>
-          </Grid>
-        </Grid>
-
-        <Grid container justify="center">
-          <Grid items>
-            <Typography variant="subtitle1" style={{ color: '#636b6f' }}>
-              Kantin Pintar Merupakan Inovasi Teknologi Informasi Masa Kini
+            <Typography variant="h2" style={{ color: '#0984E3', fontFamily: 'Raleway' }}>
+              SMART-RESTO
               </Typography>
           </Grid>
         </Grid>
