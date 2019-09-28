@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import {
-    Container, Box, Grid, Table, TableBody, TableCell, TableHead, TableRow, Paper, Button, Typography,
-    Card, CardActionArea, CardMedia, CardContent, CardActions
+    Container, Box, Grid, Table, TableBody, TableCell, TableHead, TableRow, Button, Typography,
+    Card, CardContent
 } from '@material-ui/core'
 import _ from 'lodash'
 import { Header } from '../component/core'
@@ -14,60 +14,34 @@ class Task extends Component {
 
         this.firebase = new FirebaseApp();
         this.state = {
-            margin: 250,
-            data: [],
-            orderId: '', orders: [],
+            margin: 100,
+            waiterHelper: [],
         }
     }
 
     componentDidMount() {
-        this.firebase.queue.on('value', (snapshot) => {
+        this.firebase.waiterHelper.on('value', (snapshot) => {
             let list = [];
 
             if (snapshot.hasChildren()) {
                 snapshot.forEach((result) => {
-                    if(list.length === 0)
-                        this.setState({
-                            orderId: result.key,
-                            orders: result.val().orders
-                        });
-
-                    console.log(result.key)
-
                     let temp = result.val();
+                        temp.id = result.key;
 
-                    temp.id = result.key;
                     list.push(temp);
-
-                    this.setState({
-                        data: list,
-                        margin: 100
-                    }); })
-            } else {
-                this.setState({
-                    data: [],
-                    orderId: '', orders: [],
-                    margin: 250
+                    this.setState({ waiterHelper: list})
                 })
-            }
-        })
-    }
-
-    listOnClicked(event, id, data) {
-        this.setState({ orderId: id, orders: data })
+            } else this.setState({
+                waiterHelper: []
+            })
+        });
     }
 
     render() {
-        const data = this.state.data;
-        const orders = this.state.orders;
         const margin = this.state.margin;
+        const dataWaiterHelper = this.state.waiterHelper;
 
-        const btnReadyClicked = (event) => {
-            this.firebase.queue
-                .child(this.state.orderId)
-                .remove()
-        };
-
+        // Stylesheet
         const classes = makeStyles(theme => ({
             root: {
                 width: '100%',
@@ -80,7 +54,6 @@ class Task extends Component {
                 minWidth: "auto",
             },
         }));
-
         const StyledTableCell = withStyles(theme => ({
             head: {
                 backgroundColor: theme.palette.primary.main,
@@ -95,94 +68,94 @@ class Task extends Component {
             },
         }))(TableCell);
 
-        const mainView = () => {
-            if(data.length > 0) {
-                return (
-                    <Grid container justify="center" spacing={3}>
-                        <Grid gutterBottom key={0} item >
-                            <Card className={classes.root}>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="h2" align={"center"}>
-                                        PANGGILAN
-                                    </Typography>
+        // function
+        const taskDone = (event, id, db) => { db.child(id).remove() };
 
-                                    <Table className={classes.table}>
-                                        <TableHead>
-                                            <TableRow>
-                                                <StyledTableCell align="left">No. Meja</StyledTableCell>
-                                                <StyledTableCell align="left">Catatan</StyledTableCell>
-                                                <StyledTableCell align="left" />
-                                            </TableRow>
-                                        </TableHead>
+        const mainView = () => (
+            <Grid container justify="center" spacing={3}>
+                <Grid gutterBottom key={0} item sm={5} >
+                    <Card className={classes.root}>
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2" align={"center"}>
+                                PANGGILAN
+                            </Typography>
 
-                                        <TableBody>
-                                            { orders.map((result) => (
-                                                <TableRow key={_.uniqueId('id_')} selected="true">
-                                                    <TableCell align="left"> {result.menu.name} </TableCell>
-                                                    <TableCell align="left"> {result.count} </TableCell>
-                                                    <TableCell align="right">
-                                                        <Button variant="contained" color="primary" className={classes.button}
-                                                                onClick={event => btnReadyClicked(event)} >
-                                                            SELESAI
-                                                        </Button>
-                                                    </TableCell>
-                                                </TableRow >
-                                            )) }
-                                        </TableBody>
-                                    </Table>
-                                </CardContent>
-                            </Card>
-                        </Grid>
+                            <Table className={classes.table}>
+                                <TableHead>
+                                    <TableRow>
+                                        <StyledTableCell align="left">No. Meja</StyledTableCell>
+                                        <StyledTableCell align="left">Catatan</StyledTableCell>
+                                        <StyledTableCell align="left" />
+                                    </TableRow>
+                                </TableHead>
 
-                        <Grid key={1} item>
-                            <Card className={classes.root}>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="h2" align={"center"}>
-                                        PESANAN SIAP
-                                    </Typography>
+                                <TableBody>
+                                    { dataWaiterHelper.map((result) =>
+                                        <TableRow key={_.uniqueId('id_')} selected="true">
+                                            <TableCell align="left"> {result.noTable} </TableCell>
+                                            <TableCell align="left"> {result.note} </TableCell>
+                                            <TableCell align="right">
+                                                <Button variant="contained" color="primary" className={classes.button}
+                                                        onClick={event =>
+                                                            taskDone(event, result.id, this.firebase.waiterHelper)} >
+                                                    SELESAI
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow >
+                                    ) }
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+                </Grid>
 
-                                    <Table className={classes.table}>
-                                        <TableHead>
-                                            <TableRow>
-                                                <StyledTableCell align="left">No. Meja</StyledTableCell>
-                                                <StyledTableCell align="left">Nama</StyledTableCell>
-                                                <StyledTableCell align="left">Cashback</StyledTableCell>
-                                                <StyledTableCell align="left" />
-                                                <StyledTableCell align="left" />
-                                            </TableRow>
-                                        </TableHead>
+                <Grid key={1} item>
+                    <Card className={classes.root}>
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2" align={"center"}>
+                                PESANAN SIAP
+                            </Typography>
 
-                                        <TableBody>
-                                            { orders.map((result) => (
-                                                <TableRow key={_.uniqueId('id_')} selected="true">
-                                                    <TableCell align="left"> 01 </TableCell>
-                                                    <TableCell align="left" xs={5}> Atta Halilintar </TableCell>
-                                                    <TableCell align="left"> Rp 500 </TableCell>
-                                                    <TableCell align="left">
-                                                        <Button variant="contained" color="primary"
-                                                                className={classes.button}
-                                                                onClick={event => btnReadyClicked(event)} >
-                                                            Detail
-                                                        </Button>
-                                                    </TableCell>
-                                                    <TableCell align="right">
-                                                        <Button variant="contained" color="primary"
-                                                                className={classes.button}
-                                                                onClick={event => btnReadyClicked(event)} >
-                                                            SELESAI
-                                                        </Button>
-                                                    </TableCell>
-                                                </TableRow >
-                                            )) }
-                                        </TableBody>
-                                    </Table>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    </Grid>
-                )
-            }
-        };
+                            <Table className={classes.table}>
+                                <TableHead>
+                                    <TableRow>
+                                        <StyledTableCell align="left">No. Meja</StyledTableCell>
+                                        <StyledTableCell align="left">Nama</StyledTableCell>
+                                        <StyledTableCell align="left">Cashback</StyledTableCell>
+                                        <StyledTableCell align="left" />
+                                        <StyledTableCell align="left" />
+                                    </TableRow>
+                                </TableHead>
+
+                                <TableBody>
+                                    {/*{ orders.map((result) => (*/}
+                                    {/*    <TableRow key={_.uniqueId('id_')} selected="true">*/}
+                                    {/*        <TableCell align="left"> 01 </TableCell>*/}
+                                    {/*        <TableCell align="left" xs={5}> Atta Halilintar </TableCell>*/}
+                                    {/*        <TableCell align="left"> Rp 500 </TableCell>*/}
+                                    {/*        <TableCell align="left">*/}
+                                    {/*            <Button variant="contained" color="primary"*/}
+                                    {/*                    className={classes.button}*/}
+                                    {/*                    onClick={event => btnReadyClicked(event)} >*/}
+                                    {/*                Detail*/}
+                                    {/*            </Button>*/}
+                                    {/*        </TableCell>*/}
+                                    {/*        <TableCell align="right">*/}
+                                    {/*            <Button variant="contained" color="primary"*/}
+                                    {/*                    className={classes.button}*/}
+                                    {/*                    onClick={event => btnReadyClicked(event)} >*/}
+                                    {/*                SELESAI*/}
+                                    {/*            </Button>*/}
+                                    {/*        </TableCell>*/}
+                                    {/*    </TableRow >*/}
+                                    {/*)) }*/}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
+        );
 
         return (
             <Container style={{ marginTop: margin+'px' }} maxWidth="lg" >

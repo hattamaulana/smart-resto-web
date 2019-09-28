@@ -31,8 +31,6 @@ class Queue extends Component {
                       orders: result.val().orders
                   });
 
-                console.log(result.key)
-
                let temp = result.val();
 
                temp.id = result.key;
