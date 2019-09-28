@@ -103,7 +103,7 @@ class Queue extends Component {
                     <Table className={classes.table}>
                       <TableHead>
                         <TableRow>
-                          <StyledTableCell align="left">NAMA ANTRIAN</StyledTableCell>
+                          <StyledTableCell align="left">NAMA PEMESAN</StyledTableCell>
                         </TableRow>
                       </TableHead>
 
@@ -121,21 +121,23 @@ class Queue extends Component {
                   </Paper>
                 </Grid>
 
-                <Grid key={1} item xs={5}>
+                <Grid key={1} item sm={7}>
                   <Paper className={classes.root}>
                     <Table className={classes.table}>
                       <TableHead>
                         <TableRow>
                           <StyledTableCell align="left">Menu Pesanan</StyledTableCell>
                           <StyledTableCell align="left">Jumlah Pesanan</StyledTableCell>
+                            <StyledTableCell align="left">CATATAN</StyledTableCell>
                         </TableRow>
                       </TableHead>
 
                       <TableBody>
                           { orders.map((result) => (
                               <TableRow key={_.uniqueId('id_')} selected="true">
-                                  <TableCell align="left"> {result.menu.name} </TableCell>
+                                  <TableCell  align="left"> {result.menu.name} </TableCell>
                                   <TableCell align="left"> {result.count} </TableCell>
+                                  <TableCell align="left"> {result.note} </TableCell>
                               </TableRow >
                           )) }
 

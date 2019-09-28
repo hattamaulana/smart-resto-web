@@ -13,7 +13,7 @@ function Root () {
 
           <div class="links">
             <Link to="/menu" style={{ color: '#B2BEC3' }}>List Menu</Link>
-            <Link to="/order/preview" style={{ color: '#B2BEC3' }}>Waiter's Task</Link>
+            <Link to="/waiter/task" style={{ color: '#B2BEC3' }}>Waiter's Task</Link>
             <Link to="/kitchen/queue" style={{ color: '#B2BEC3' }}>Order Queue</Link>
           </div>
         </div>
