@@ -17,7 +17,7 @@ class FirebaseApp {
       
       this.checkout = firebase.database().ref('ecanteen/order')
       this.queue = firebase.database().ref('ecanteen/queue')
-
+      this.callWaiter = firebase.database().ref('ecanteen/call_waiter')
       this.menu = firebase.firestore().collection("items")
    }
 }
