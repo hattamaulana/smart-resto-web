@@ -59,10 +59,11 @@ class Queue extends Component {
       const orders = this.state.orders;
       const margin = this.state.margin;
 
-      const btnReadyClicked = (event) => { 
-        this.firebase.queue
-            .child(this.state.orderId)
-            .remove()
+      const btnReadyClicked = (event) => {
+          this.firebase.waiterDeliver.push(data)
+          this.firebase.queue
+              .child(this.state.orderId)
+              .remove()
       };
 
       const classes = makeStyles(theme => ({

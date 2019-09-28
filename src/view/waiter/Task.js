@@ -16,6 +16,7 @@ class Task extends Component {
         this.state = {
             margin: 100,
             waiterHelper: [],
+            waiterDelivery: []
         }
     }
 
@@ -35,10 +36,27 @@ class Task extends Component {
                 waiterHelper: []
             })
         });
+
+        this.firebase.waiterDeliver.on('value', (snapshot) => {
+            let list = [];
+
+            if (snapshot.hasChildren()) {
+                snapshot.forEach((result) => {
+                    let temp = result.val();
+                    temp.id = result.key;
+
+                    list.push(temp);
+                    this.setState({waiterDelivery: list})
+                })
+            } else this.setState({
+                waiterDelivery: []
+            })
+        });
     }
 
     render() {
         const margin = this.state.margin;
+        const waiterDelivery = this.state.waiterDelivery;
         const dataWaiterHelper = this.state.waiterHelper;
 
         // Stylesheet
@@ -123,32 +141,26 @@ class Task extends Component {
                                         <StyledTableCell align="left">Nama</StyledTableCell>
                                         <StyledTableCell align="left">Cashback</StyledTableCell>
                                         <StyledTableCell align="left" />
-                                        <StyledTableCell align="left" />
                                     </TableRow>
                                 </TableHead>
 
                                 <TableBody>
-                                    {/*{ orders.map((result) => (*/}
-                                    {/*    <TableRow key={_.uniqueId('id_')} selected="true">*/}
-                                    {/*        <TableCell align="left"> 01 </TableCell>*/}
-                                    {/*        <TableCell align="left" xs={5}> Atta Halilintar </TableCell>*/}
-                                    {/*        <TableCell align="left"> Rp 500 </TableCell>*/}
-                                    {/*        <TableCell align="left">*/}
-                                    {/*            <Button variant="contained" color="primary"*/}
-                                    {/*                    className={classes.button}*/}
-                                    {/*                    onClick={event => btnReadyClicked(event)} >*/}
-                                    {/*                Detail*/}
-                                    {/*            </Button>*/}
-                                    {/*        </TableCell>*/}
-                                    {/*        <TableCell align="right">*/}
-                                    {/*            <Button variant="contained" color="primary"*/}
-                                    {/*                    className={classes.button}*/}
-                                    {/*                    onClick={event => btnReadyClicked(event)} >*/}
-                                    {/*                SELESAI*/}
-                                    {/*            </Button>*/}
-                                    {/*        </TableCell>*/}
-                                    {/*    </TableRow >*/}
-                                    {/*)) }*/}
+                                    {waiterDelivery.map((result) => (
+                                         <TableRow key={_.uniqueId('id_')} selected="true">
+                                             <TableCell align="left"> 01 </TableCell>
+                                             <TableCell align="left" xs={5}> Atta Halilintar </TableCell>
+                                             <TableCell align="left"> Rp 500 </TableCell>
+                                             <TableCell align="right">
+
+                                                 <Button variant="contained" color="primary"
+                                                         className={classes.button}
+                                                         onClick={event =>
+                                                             taskDone(event, result.id, this.firebase.waiterDeliver)} >
+                                                     SELESAI
+                                                 </Button>
+                                             </TableCell>
+                                         </TableRow >
+                                    ))}
                                 </TableBody>
                             </Table>
                         </CardContent>
