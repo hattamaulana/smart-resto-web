@@ -11,9 +11,7 @@ import {
     TableRow,
     withStyles,
     makeStyles,
-    Grid,
-    Button,
-    CardContent, Typography, Card
+    Grid, Typography
 } from '@material-ui/core';
 
 class PrintPreview extends Component {
@@ -31,19 +29,6 @@ class PrintPreview extends Component {
         /**
          * Stylesheet
          */
-        const StyledTableCell = withStyles(theme => ({
-            head: {
-                backgroundColor: theme.palette.primary.main,
-                color: theme.palette.common.white,
-                fontWeight: "bold",
-                fontSize: 16,
-            },
-
-            body: {
-                fontSize: 14,
-                fontWeight: "bold"
-            },
-        }))(TableCell);
         const classes = makeStyles(theme => ({
             root: {
                 width: '100%',
@@ -52,7 +37,7 @@ class PrintPreview extends Component {
             },
 
             table: {
-                minWidth: 650,
+                width: '100%',
             },
 
             icon: {
@@ -60,69 +45,74 @@ class PrintPreview extends Component {
                 fontSize: 32,
             },
         }));
+        const StyledTableCell = withStyles(theme => ({
+            head: {
+                backgroundColor: theme.palette.primary.main,
+                color: theme.palette.common.white,
+                fontWeight: "bold",
+                fontSize: 24,
+            },
 
-        const mainView = () => { return (
-            <Box mt={5} width={1}>
-                <Grid container justify="center">
-                    <Grid item xs={7}>
-                        <Card className={classes.root}>
-                            <CardContent style={{marginLeft: "25px"}}>
-                                <div style={{width: '100px'}}>
-                                    <QRCode value={"1"}
-                                            style={{ float: "left", width: '95px', height: '95px' }} />
-                                    <Typography>
-                                        No. Meja : { page }
-                                    </Typography>
-                                </div>
-                            </CardContent>
-
-                            <CardContent>
-                                <Table gutterBottom className={classes.table}>
-                                    <TableHead component="thead">
-                                        <TableRow variant="head" >
-                                            <StyledTableCell align="center" variant="head">
-                                                QR Code
-                                            </StyledTableCell>
-
-                                            <StyledTableCell align="left" variant="head">
-                                                Nama
-                                            </StyledTableCell>
-
-                                            <StyledTableCell align="left" variant="head">
-                                                Harga
-                                            </StyledTableCell>
-                                        </TableRow>
-                                    </TableHead>
-
-                                    <TableBody>{
-                                        data.map(result => (
-                                            <TableRow key={data.id} >
-                                                <TableCell>
-                                                    <QRCode value={page+ "-" +result.id}
-                                                            style={{ width: '50px', height: '50px' }} />
-                                                </TableCell>
-
-                                                <TableCell component="th" scope="row">
-                                                    {result.name}
-                                                </TableCell>
-
-                                                <TableCell align="left">
-                                                    Rp. {result.price}
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}</TableBody>
-                                </Table>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                </Grid>
-            </Box>
-        )};
+            body: {
+                fontSize: 20,
+            }
+        }))(TableCell);
 
         return (
-            <Container width={1} >
-                { mainView() }
-            </Container>
+            <Grid container>
+                <Grid container style={{ marginBottom: '15px'}}>
+                    <Grid items xs={3}>
+                        <QRCode value={page} style={{ width: '95px', height: '95px' }} />
+                        <Typography>
+                            No. Meja : {page}
+                        </Typography>
+                    </Grid>
+
+                    <Grid items xs={6}>
+                        <Typography variant="h3"
+                                    align={"center"}
+                                    style={{ color: '#0984E3', fontFamily: 'Raleway', lineHeight: '100px' }} >
+                            SMART-RESTO
+                        </Typography>
+                    </Grid>
+                </Grid>
+
+                <Table gutterBottom className={classes.table}>
+                    <TableHead component="thead">
+                        <TableRow variant="head" style={{ paddingTop: '100px'}} >
+                            <StyledTableCell align="center" variant="head">
+                                QR Code
+                            </StyledTableCell>
+
+                            <StyledTableCell align="left" variant="head">
+                                Nama
+                            </StyledTableCell>
+
+                            <StyledTableCell align="left" variant="head" >
+                                Harga
+                            </StyledTableCell>
+                        </TableRow>
+                    </TableHead>
+
+                    <TableBody>{
+                        data.map(result => (
+                            <TableRow key={data.id} >
+                                <StyledTableCell align="center" variant="body">
+                                    <QRCode value={page + "-" + result.id}
+                                            style={{ width: '75px', height: '75px' }} />
+                                </StyledTableCell>
+
+                                <StyledTableCell align="left" variant="body">
+                                    {result.name}
+                                </StyledTableCell>
+
+                                <StyledTableCell align="left" variant="body">
+                                    Rp. {result.price}
+                                </StyledTableCell>
+                            </TableRow>
+                        ))}</TableBody>
+                </Table>
+            </Grid>
         )
     }
 }

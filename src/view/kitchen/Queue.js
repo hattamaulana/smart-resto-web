@@ -61,6 +61,26 @@ class Queue extends Component {
 
       const btnReadyClicked = (event) => {
           this.firebase.waiterDeliver.push(data)
+
+          this.firebase.status.on('value', (snapshot) => {
+              snapshot.forEach((result) => {
+                  let target = result.val()
+
+                  data.forEach(i => {
+                      if (target.uid === i.uid) {
+                          var update = {};
+
+                          console.log(i)
+
+                          this.firebase.status.child(result.key).set({
+                              status: 'Pesanan Sudah Siap',
+                              uid: i.uid
+                          })
+                      }
+                  })
+              })
+          })
+
           this.firebase.queue
               .child(this.state.orderId)
               .remove()

@@ -16,11 +16,11 @@ import {
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 
 import Header from '../component/Header';
+import PrintButton from "../component/printer/PrintButton";
 import PrintPreview from "./PrintPreview";
+import PrintResouce from "./PrintResource";
 
 class List extends Component {
   constructor(props) {
@@ -106,7 +106,7 @@ class List extends Component {
 
       return (
           <MuiDialogTitle disableTypography className={classes.root}>
-            <Typography variant="h6">{children}</Typography>
+            <Typography variant="h4" align={"center"}>{children}</Typography>
           </MuiDialogTitle>
       );
     });
@@ -127,99 +127,105 @@ class List extends Component {
 
     return (
         <Container width={1} >
-          <Header />
+          <Card className={classes.root} style={{ marginTop: '50px', paddingTop: '50px'}}>
+            <CardContent style={{marginLeft: "25px"}}>
+              <Grid container spacing={5}>
+                <Grid items xs={3}>
+                  <QRCode value={"1"} style={{ width: '95px', height: '95px' }} />
+                  <Typography>
+                    No. Meja : 1
+                  </Typography>
+                </Grid>
 
-            <Grid container justify="center" style={{ marginBottom: '100px'}}>
-              <Grid item xs={7} >
-                <Card className={classes.root}>
-                  <CardContent style={{marginLeft: "25px"}}>
-                    <div style={{width: '100px'}}>
-                      <QRCode value={"1"} style={{ float: "left", width: '95px', height: '95px' }} />
-                      <Typography>
-                        No. Meja : 1
-                      </Typography>
-                    </div>
-                  </CardContent>
-
-                  <CardContent>
-                    <Table gutterBottom className={classes.table}>
-                      <TableHead component="thead">
-                        <TableRow variant="head" >
-                          <StyledTableCell align="center" variant="head"> QR Code </StyledTableCell>
-                          <StyledTableCell align="left" variant="head"> Nama </StyledTableCell>
-                          <StyledTableCell align="left" variant="head"> Harga </StyledTableCell>
-                          <StyledTableCell align="left" variant="head"> Edit </StyledTableCell>
-                          <StyledTableCell align="left" variant="head"> Hapus </StyledTableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {
-                          data.map(result => (
-                              <TableRow key={result.id} >
-                                <TableCell component="th" scope="row" align="center">
-                                  <QRCode value={"1-" + result.id} style={{ width: '50px', height: '50px' }} />
-                                </TableCell>
-
-                                <TableCell component="th" scope="row"> {result.name} </TableCell>
-                                <TableCell align="left">Rp. {result.price} </TableCell>
-
-                                <TableCell align="center">
-                                  <EditIcon className={classes.icon} />
-                                </TableCell>
-
-                                <TableCell align="center">
-                                  <DeleteIcon className={ classes.icon } />
-                                </TableCell>
-                              </TableRow >
-                          ))
-                        }
-                      </TableBody>
-                    </Table>
-                  </CardContent>
-
-                  <CardContent>
-                    <Link to="/menu/new">
-                      <Button variant="contained" color="primary">
-                        TAMBAH MENU BARU
-                      </Button>
-                    </Link>
-
-                    <div style={{ float: 'right'}}>
-                      <TextField
-                          id="standard-password-input" label="Banyak Meja" value={page}
-                          className={classes.textField}
-                          type="number" margin="normal"
-                          onChange={ event => onChange(event) }
-                          style={{ marginLeft: '10px', marginRight: '10px', marginTop: '-10px' }}
-                      />
-
-                      <Button variant="contained" color="primary" onClick={handleClickOpen}>
-                        PRINT
-                      </Button>
-
-                      <Dialog onClose={handleClose} open={open}
-                              fullWidth={true} maxWidth={"md"}
-                              aria-labelledby="customized-dialog-title"
-                      >
-                        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                          Modal title
-                        </DialogTitle>
-                        <DialogContent dividers>
-                          <PrintPreview page={page} data={data} />
-                        </DialogContent>
-
-                        <DialogActions>
-                          <Button onClick={handleClose} color="primary">
-                            PRINT
-                          </Button>
-                        </DialogActions>
-                      </Dialog>
-                    </div>
-
-                  </CardContent>
-                </Card>
+                <Grid items xs={6}>
+                  <Typography variant="h2" style={{ color: '#0984E3', fontFamily: 'Raleway' }} align={"center"}>
+                    SMART-RESTO
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
+
+              <Grid items xs={3} />
+            </CardContent>
+
+            <CardContent>
+              <Table gutterBottom className={classes.table}>
+                <TableHead component="thead">
+                  <TableRow variant="head" >
+                    <StyledTableCell align="center" variant="head"> QR Code </StyledTableCell>
+                    <StyledTableCell align="left" variant="head"> Nama </StyledTableCell>
+                    <StyledTableCell align="left" variant="head"> Harga </StyledTableCell>
+                    <StyledTableCell align="left" variant="head"> Edit </StyledTableCell>
+                    <StyledTableCell align="left" variant="head"> Hapus </StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {
+                    data.map(result => (
+                        <TableRow key={result.id} >
+                          <TableCell component="th" scope="row" align="center">
+                            <QRCode value={"1-" + result.id} style={{ width: '50px', height: '50px' }} />
+                          </TableCell>
+
+                          <TableCell component="th" scope="row"> {result.name} </TableCell>
+                          <TableCell align="left">Rp. {result.price} </TableCell>
+
+                          <TableCell align="center">
+                            <EditIcon className={classes.icon} />
+                          </TableCell>
+
+                          <TableCell align="center">
+                            <DeleteIcon className={ classes.icon } />
+                          </TableCell>
+                        </TableRow >
+                    ))
+                  }
+                </TableBody>
+              </Table>
+            </CardContent>
+
+            <CardContent>
+              <Link to="/menu/new">
+                <Button variant="contained" color="primary">
+                  TAMBAH MENU BARU
+                </Button>
+              </Link>
+
+              <div style={{ float: 'right'}}>
+                <TextField
+                    id="standard-password-input" label="Nomor Meja" value={page}
+                    className={classes.textField}
+                    type="number" margin="normal"
+                    onChange={ event => onChange(event) }
+                    style={{ marginLeft: '10px', marginRight: '10px', marginTop: '-10px' }}
+                />
+
+                <Button variant="contained" color="primary" onClick={handleClickOpen}>
+                  PRINT
+                </Button>
+
+                <Dialog onClose={handleClose} open={open}
+                        fullWidth={true} maxWidth={"md"}
+                        aria-labelledby="customized-dialog-title" >
+                  <DialogTitle id="customized-dialog-title" onClose={handleClose} >
+                    PRINT PREVIEW
+                  </DialogTitle>
+
+                  <DialogContent dividers>
+                    <PrintResouce id={"print"} data={data} page={page} />
+                  </DialogContent>
+
+                  <DialogActions>
+                    <PrintButton id={"print"} label={"PRINT"}
+                                 onClick={handleClose}
+                                 style={{ margin: '25px'}}
+                    >
+                    </PrintButton>
+                  </DialogActions>
+                </Dialog>
+              </div>
+
+            </CardContent>
+          </Card>
         </Container>
     )
   }

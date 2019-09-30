@@ -14,12 +14,14 @@ class FirebaseApp {
    constructor() {
       if(! firebase.apps.length)
          firebase.initializeApp(this.config)
-      
+
+      this.realtimeDb = firebase.database()
       this.checkout = firebase.database().ref('ecanteen/order')
       this.queue = firebase.database().ref('ecanteen/queue')
       this.waiterHelper = firebase.database().ref('ecanteen/waiter/help')
       this.waiterDeliver = firebase.database().ref('ecanteen/waiter/delivery')
       this.menu = firebase.firestore().collection("items")
+      this.status = firebase.database().ref('ecanteen/status')
    }
 }
 

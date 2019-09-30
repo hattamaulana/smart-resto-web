@@ -42,10 +42,12 @@ class Task extends Component {
 
             if (snapshot.hasChildren()) {
                 snapshot.forEach((result) => {
-                    let temp = result.val();
-                    temp.id = result.key;
+                    result.val().forEach((i) => {
+                        let temp = i;
+                            temp.id = result.key;
+                        list.push(temp)
+                    });
 
-                    list.push(temp);
                     this.setState({waiterDelivery: list})
                 })
             } else this.setState({
@@ -88,6 +90,36 @@ class Task extends Component {
 
         // function
         const taskDone = (event, id, db) => { db.child(id).remove() };
+        const sudahDiantar = (event, id, uid, db) => {
+            db.child(id).remove()
+
+            this.firebase.status.on('value', (snapshot) => {
+                snapshot.forEach((result) => {
+                    if (result.val().uid === uid) {
+                        this.firebase.status.child(result.key).remove()
+                    }
+                })
+            })
+        };
+
+        const loadData = (data) => {
+            return data.forEach(i => (
+                <TableRow key={_.uniqueId('id_')} selected="true">
+                    <TableCell align="left"> { i.noTable } </TableCell>
+                    <TableCell align="left" xs={5}> { i.name } </TableCell>
+                    <TableCell align="left"> Rp { i.cashback } </TableCell>
+                    <TableCell align="right">
+
+                        <Button variant="contained" color="primary"
+                                className={classes.button}
+                                onClick={event =>
+                                    taskDone(event, data.id, this.firebase.waiterDeliver)} >
+                            SELESAI
+                        </Button>
+                    </TableCell>
+                </TableRow >
+            ))
+        };
 
         const mainView = () => (
             <Grid container justify="center" spacing={3}>
@@ -147,15 +179,16 @@ class Task extends Component {
                                 <TableBody>
                                     {waiterDelivery.map((result) => (
                                          <TableRow key={_.uniqueId('id_')} selected="true">
-                                             <TableCell align="left"> 01 </TableCell>
-                                             <TableCell align="left" xs={5}> Atta Halilintar </TableCell>
-                                             <TableCell align="left"> Rp 500 </TableCell>
+                                             <TableCell align="left"> { result.noTable} </TableCell>
+                                             <TableCell align="left" xs={5}> { result.name } </TableCell>
+                                             <TableCell align="left"> Rp { result.cassback } </TableCell>
                                              <TableCell align="right">
 
                                                  <Button variant="contained" color="primary"
                                                          className={classes.button}
                                                          onClick={event =>
-                                                             taskDone(event, result.id, this.firebase.waiterDeliver)} >
+                                                             sudahDiantar(event,
+                                                                 result.id, result.uid, this.firebase.waiterDeliver)} >
                                                      SELESAI
                                                  </Button>
                                              </TableCell>
