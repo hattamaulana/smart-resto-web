@@ -20,6 +20,7 @@ class FirebaseApp {
       this.queue = firebase.database().ref('ecanteen/queue')
       this.waiterHelper = firebase.database().ref('ecanteen/waiter/help')
       this.waiterDeliver = firebase.database().ref('ecanteen/waiter/delivery')
+      
       this.menu = firebase.firestore().collection("items")
       this.status = firebase.database().ref('ecanteen/status')
    }

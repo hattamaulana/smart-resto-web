@@ -2,6 +2,7 @@ import React, { Component, useState } from 'react'
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import QRCode from 'qrcode.react';
+import Update from './Update'
 import { Link } from 'react-router-dom';
 import { FirebaseApp } from '../../config/Firebase';
 import {
@@ -17,24 +18,24 @@ import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 
-import Header from '../component/Header';
 import PrintButton from "../component/printer/PrintButton";
-import PrintPreview from "./PrintPreview";
 import PrintResouce from "./PrintResource";
 
 class List extends Component {
   constructor(props) {
     super(props);
 
-    this.fireabase = new FirebaseApp();
+    this.firebase = new FirebaseApp();
     this.state = {
       data: [], page: 1,
       open: false,
+      openUpdateData: false,
+      dataWillUpdate: {},
     };
   }
 
   componentDidMount() {
-    this.fireabase.menu.get().then((snapshot) => {
+      this.firebase.menu.get().then((snapshot) => {
       var list = [];
 
       if(snapshot.size > 0) {
@@ -52,6 +53,8 @@ class List extends Component {
     const data = this.state.data;
     const page = this.state.page;
     const open = this.state.open;
+    const openUpdateData = this.state.openUpdateData;
+      const dataWillUpdate = this.state.dataWillUpdate;
 
     const classes = makeStyles(theme => ({
       root: {
@@ -124,6 +127,19 @@ class List extends Component {
 
     const handleClickOpen = () => { this.setState({ open: true }); };
     const handleClose = () => { this.setState({open: false}) };
+    const handleClickOpenUpdateData = (event, data) => { 
+        this.setState({ openUpdateData: true, dataWillUpdate: data }); 
+    };
+    const handleCloseUpdateData = () => { this.setState({ openUpdateData: false }) };
+    const handleEditFinish = (closed) => { 
+        this.setState({ openUpdateData: false })
+        window.location.reload()
+    }
+
+      const deleteList = (evt, doc) => {
+          this.firebase.menu.doc(doc).delete()
+            .then(ref => window.location.reload())
+      }
 
     return (
         <Container width={1} >
@@ -159,26 +175,29 @@ class List extends Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {
-                    data.map(result => (
+                    {data.map(result => (
                         <TableRow key={result.id} >
-                          <TableCell component="th" scope="row" align="center">
-                            <QRCode value={"1-" + result.id} style={{ width: '50px', height: '50px' }} />
-                          </TableCell>
+                            <TableCell component="th" scope="row" align="center">
+                                <QRCode value={"1-" + result.id} style={{ width: '50px', height: '50px' }} />
+                            </TableCell>
 
-                          <TableCell component="th" scope="row"> {result.name} </TableCell>
-                          <TableCell align="left">Rp. {result.price} </TableCell>
+                            <TableCell component="th" scope="row"> {result.name} </TableCell>
+                            <TableCell align="left">Rp. {result.price} </TableCell>
 
-                          <TableCell align="center">
-                            <EditIcon className={classes.icon} />
-                          </TableCell>
+                            <TableCell align="center">
+                                <EditIcon className={classes.icon} 
+                                    onClick={event => handleClickOpenUpdateData(event, result)}
+                                    style={{ cursor: 'pointer' }}
+                                />
+                            </TableCell>
 
-                          <TableCell align="center">
-                            <DeleteIcon className={ classes.icon } />
-                          </TableCell>
+                            <TableCell align="center">
+                                <DeleteIcon className={classes.icon} 
+                                    onClick={event => deleteList(event, result.id)}
+                                    style={{ cursor: 'pointer' }} />
+                            </TableCell>
                         </TableRow >
-                    ))
-                  }
+                    ))}
                 </TableBody>
               </Table>
             </CardContent>
@@ -202,7 +221,8 @@ class List extends Component {
                 <Button variant="contained" color="primary" onClick={handleClickOpen}>
                   PRINT
                 </Button>
-
+                
+                {/* Dialog Print */}
                 <Dialog onClose={handleClose} open={open}
                         fullWidth={true} maxWidth={"md"}
                         aria-labelledby="customized-dialog-title" >
@@ -222,8 +242,19 @@ class List extends Component {
                     </PrintButton>
                   </DialogActions>
                 </Dialog>
-              </div>
 
+                {/*  Dialog edit data */}
+                <Dialog onClose={handleCloseUpdateData} open={openUpdateData}
+                    fullWidth={true} maxWidth={"md"}
+                    aria-labelledby="customized-dialog-title" >
+                    <DialogTitle id="customized-dialog-title" onClose={handleCloseUpdateData} >
+                        UPDATE DATA
+                    </DialogTitle>
+                    <DialogContent dividers>
+                        <Update data={dataWillUpdate} evt={handleEditFinish} />
+                    </DialogContent>
+                </Dialog>
+              </div>
             </CardContent>
           </Card>
         </Container>
